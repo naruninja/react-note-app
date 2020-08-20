@@ -1,0 +1,25 @@
+{
+   "compilerOptions": {
+      "module": "esnext",
+      "target": "esnext",
+      "moduleResolution": "node",
+      "allowJs": true,
+      "noEmit": true,
+      "isolatedModules": true,
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+      "baseUrl": "src",
+      "jsx": "react",
+      "paths": {
+         "Components/*": ["components/*"],
+         "Containers/*": ["containers/*"],
+         "Reducers/*": ["reducers/*"],
+         "Sagas/*": ["sagas/*"],
+         "Services/*": ["services/*"],
+         "Root/*": ["*"],
+         "_/*": ["*"],
+         "_pw/*": ["product-web/*"]
+      }
+   },
+   "include": ["src"]
+}
