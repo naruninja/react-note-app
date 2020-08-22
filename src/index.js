@@ -1,19 +1,20 @@
-require('react-hot-loader')
+import 'react-hot-loader'
+import 'bulma/css/bulma.css'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
-import { Router } from 'react-router'
 import { App } from './App'
 import { store } from './store'
 import { history } from '_/history'
+import { BrowserRouter } from 'react-router-dom'
 
 const app_element = document.getElementById('app')
 
 const Root = () => (
    <Provider store={store}>
-      <Router history={history}>
+      <BrowserRouter history={history}>
          <App />
-      </Router>
+      </BrowserRouter>
    </Provider>
 )
 

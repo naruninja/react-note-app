@@ -7,6 +7,7 @@ Předpřipravený server BSC s REST API, které bude aplikace používat:
 Root URL: `http://private-9aad-note10.apiary-mock.com/` (případně použijte REST api podle uvážení: `https://www.firebase.com/` , `http://jsonplaceholder.typicode.com/`, nebo vlastní řešení)
 
 Metody:
+
 ```
 GET /notes
 
@@ -18,7 +19,6 @@ PUT /notes/{id}
 
 DELETE /notes/{id}
 ```
- 
 
 ## Funkční požadavky:
 
@@ -30,18 +30,14 @@ Router, (pokud použijete React a Redux pak react-redux-router)
 
 V aplikaci bude možné měnit EN/CZ jazyk (místo CZ může být RU, DE..)…
 
- 
-
 ## Nefunkční požadavky:
 
 GUI dle vlastního návrhu, použití Bootstrapu/Material/Bulma a alespon jedno z: css-modules/styled-components/LESS/SCSS/Stylus/…
 
-Kód by měl být ES6+ JS nebo TS s použitím novějších API jako Promise, Array HOF, async/await, použití generatorové funkce (CO.js, redux-saga) je plus
+Kód by měl být ES6+ JS nebo TS s použi\*\*tím novějších API jako Promise, Array HOF, async/await, použití generatorové funkce (CO.js, redux-saga) je plus
 
 Instalace závislostí a build pomocí webpack, rollup.
 
 Alespoň jeden základní Unit test (Jest, Jasmin, Mocha, Chai…).
 
 Kód vyvíjejte do github/bitbucket veřejného repository, v souboru README.md popište instrukce pro instalaci a spuštění aplikace a testu, a pošlete URL emailem.
-
- 

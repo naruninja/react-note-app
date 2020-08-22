@@ -2,6 +2,7 @@ import { applyMiddleware, compose, createStore } from 'redux'
 import { createEpicMiddleware } from 'redux-observable'
 import { configureStore } from '@reduxjs/toolkit'
 import { noteSlice } from '_/slices/noteSlice'
+import { rootEpic } from '_/epic'
 
 const epicMiddleware = createEpicMiddleware()
 
@@ -15,6 +16,6 @@ const store = configureStore({
 
 export type RootState = ReturnType<typeof store.getState>
 
-// epicMiddleware.run(rootEpic)
+epicMiddleware.run(rootEpic)
 
 export { store }
