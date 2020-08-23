@@ -49,13 +49,29 @@ export const testEpicImp = <A extends Action<string, any>, D>(
    const emitState = stateSubject.next.bind(stateSubject)
 
    const epicEmissions: A[] = []
-   epic(action$, state$, {} as D).subscribe(act => {
-      const nextState = rootReducer(state$.value, act)
-      emitState(nextState)
-      epicEmissions.push(act)
-   })
+   const errors: any[] = []
+   epic(action$, state$, {} as D).subscribe(
+      act => {
+         const nextState = rootReducer(state$.value, act)
+         emitState(nextState)
+         epicEmissions.push(act)
+      },
+      err => {
+         console.error(err)
+         errors.push(err)
+      }
+   )
 
-   return { emitAction, epicEmissions, state$ }
+   return {
+      emitAction: (act: A) => {
+         const nextState = rootReducer(state$.value, act)
+         emitState(nextState)
+         emitAction(act)
+      },
+      epicEmissions,
+      state$,
+      errors,
+   }
 }
 
 describe('noteEpic', () => {
@@ -85,7 +101,92 @@ describe('noteEpic', () => {
          emitAction(noteSlice.actions.fetchNotes())
 
          const st = state$.value
+         expect(epicEmissions).toHaveLength(1)
          expect(selNoteList(st)).toEqual(notes.slice().reverse())
+      })
+
+      it('fetches a note correctly', async () => {
+         const { emitAction, epicEmissions, state$ } = testEpicImp(rootEpic)
+         noteApiMock.request.mockImplementation(
+            mockRouter({
+               [`GET/${notes[0].id}`]: () => {
+                  return notes[0]
+               },
+            })
+         )
+         emitAction(noteSlice.actions.fetchNote(1))
+
+         const st = state$.value
+         expect(epicEmissions).toHaveLength(1)
+         expect(selNoteList(st)).toEqual([notes[0]])
+      })
+
+      it('adds a note correctly', async () => {
+         const { emitAction, epicEmissions, state$ } = testEpicImp(
+            rootEpic,
+            rootReducer(undefined, noteSlice.actions.fetchNotes_success(notes))
+         )
+         const title = 'Do not feed the gorilla'
+         let hasCreated = false
+         noteApiMock.request.mockImplementation(
+            mockRouter({
+               [`POST/`]: ({ title }) => {
+                  hasCreated = true
+                  return { id: 300, title }
+               },
+            })
+         )
+         emitAction(noteSlice.actions.addNote(title))
+
+         const st = state$.value
+         expect(hasCreated).toBeTruthy()
+         expect(epicEmissions).toHaveLength(1)
+         expect(selNoteList(st)).toEqual([{ id: 300, title }, ...notes.slice().reverse()])
+      })
+
+      it('updates notes correctly', async () => {
+         const { emitAction, epicEmissions, state$ } = testEpicImp(
+            rootEpic,
+            rootReducer(undefined, noteSlice.actions.fetchNotes_success(notes))
+         )
+         const title = 'Do not feed the gorilla'
+         let hasUpdated = false
+         noteApiMock.request.mockImplementation(
+            mockRouter({
+               [`PUT/2`]: note => {
+                  hasUpdated = true
+                  return note
+               },
+            })
+         )
+         emitAction(noteSlice.actions.updateNote({ id: 2, title }))
+
+         const st = state$.value
+         expect(hasUpdated).toBeTruthy()
+         expect(epicEmissions).toHaveLength(1)
+         expect(selNoteList(st)).toEqual([{ id: 2, title }, notes[0]])
+      })
+
+      it('deletes notes correctly', async () => {
+         const { emitAction, epicEmissions, state$ } = testEpicImp(
+            rootEpic,
+            rootReducer(undefined, noteSlice.actions.fetchNotes_success(notes))
+         )
+         let hasDeleted = false
+         noteApiMock.request.mockImplementation(
+            mockRouter({
+               [`DELETE/2`]: note => {
+                  hasDeleted = true
+                  return null
+               },
+            })
+         )
+         emitAction(noteSlice.actions.deleteNote(2))
+
+         const st = state$.value
+         expect(hasDeleted).toBeTruthy()
+         expect(epicEmissions).toHaveLength(1)
+         expect(selNoteList(st)).toEqual([notes[0]])
       })
    })
 })
