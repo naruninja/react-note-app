@@ -7,6 +7,10 @@ require('dotenv').config({
 
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+if (!process.env.NOTE_API_URL)
+   throw new Error(
+      'You must provide the environment variable NOTE_API_URL, see README.md for more details.'
+   )
 
 module.exports = {
    entry: {
@@ -25,15 +29,6 @@ module.exports = {
          {
             test: /\.css$/,
             use: ['style-loader', 'css-loader'],
-         },
-         {
-            test: /\.(gif|png|jpe?g|svg|ttf|eot|woff2?)$/i,
-            use: [
-               {
-                  loader: 'url-loader',
-                  options: {},
-               },
-            ],
          },
          {
             test: /\.scss$/,
@@ -64,6 +59,7 @@ module.exports = {
          inlineSource: '.(js|css)$',
       }),
       new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+      new webpack.EnvironmentPlugin(['NOTE_API_URL']),
    ],
 
    resolve: {
