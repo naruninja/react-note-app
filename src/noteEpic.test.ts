@@ -10,6 +10,7 @@ import { ActionsObservable, Epic, StateObservable } from 'redux-observable'
 import { rootReducer, RootState } from '_/store'
 import { root } from 'rxjs/internal-compatibility'
 import { NoteApi } from '_/noteApi'
+import { push } from 'connected-react-router'
 
 jest.mock('_/noteApi')
 const noteApiMock = noteApi as jest.Mocked<NoteApi>
@@ -187,6 +188,31 @@ describe('noteEpic', () => {
          expect(hasDeleted).toBeTruthy()
          expect(epicEmissions).toHaveLength(1)
          expect(selNoteList(st)).toEqual([notes[0]])
+      })
+
+      it('redirects on delete if at detail page', async () => {
+         const initSt = rootReducer(undefined, noteSlice.actions.fetchNotes_success(notes))
+         const { emitAction, epicEmissions, state$ } = testEpicImp(rootEpic, {
+            ...initSt,
+            router: {
+               ...initSt.router,
+               location: {
+                  ...initSt.router.location,
+                  pathname: '/note/2',
+               },
+            },
+         })
+         noteApiMock.request.mockImplementation(
+            mockRouter({
+               [`DELETE/2`]: note => {
+                  return null
+               },
+            })
+         )
+         emitAction(noteSlice.actions.deleteNote(2))
+
+         const st = state$.value
+         expect(epicEmissions).toHaveLength(2)
       })
    })
 })
