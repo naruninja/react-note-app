@@ -1,7 +1,9 @@
-import { exhaustMap, filter, map, startWith, tap } from 'rxjs/operators'
-import { combineEpics, ofType } from 'redux-observable'
+import { exhaustMap, filter, map, mergeAll, startWith, tap, withLatestFrom } from 'rxjs/operators'
+import { combineEpics, ofType, StateObservable } from 'redux-observable'
 import { noteApi } from '_/inst'
 import { Note, noteSlice } from '_/slices/noteSlice'
+import { RootState } from '_/store'
+import { push } from 'connected-react-router'
 
 export const fetchNotesEpic = action$ =>
    action$.pipe(
@@ -31,18 +33,43 @@ export const addNoteEpic = action$ =>
             .request<Note>('POST', '/', {
                title,
             })
-            .pipe(map(note => noteSlice.actions.addNote_success(note)))
+            .pipe(map(note => noteSlice.actions.addNote_success({ ...note, title })))
       )
    )
 
-export const deleteNoteEpic = action$ =>
+export const updateNoteEpic = action$ =>
+   action$.pipe(
+      ofType('note/updateNote'),
+      exhaustMap(({ payload: note }: { payload: Note }) =>
+         noteApi
+            .request<Note>('PUT', `/${note.id}`, note)
+            .pipe(map(note => noteSlice.actions.updateNote_success(note)))
+      )
+   )
+
+export const deleteNoteEpic = (action$, state$: StateObservable<RootState>) =>
    action$.pipe(
       ofType('note/deleteNote'),
       exhaustMap(({ payload: noteId }) =>
-         noteApi
-            .request('DELETE', `/${noteId}`)
-            .pipe(map(() => noteSlice.actions.deleteNote_success(noteId)))
+         noteApi.request('DELETE', `/${noteId}`).pipe(
+            withLatestFrom(state$),
+            map(([, st]) => {
+               const location = st.router.location.pathname
+               const isAtDetailPage = location === `/note/${noteId}`
+               return [
+                  isAtDetailPage ? push('/') : null,
+                  noteSlice.actions.deleteNote_success(noteId),
+               ].filter(x => !!x)
+            }),
+            mergeAll()
+         )
       )
    )
 
-export const noteEpic = combineEpics(fetchNotesEpic, fetchNoteEpic, addNoteEpic, deleteNoteEpic)
+export const noteEpic = combineEpics(
+   fetchNotesEpic,
+   fetchNoteEpic,
+   addNoteEpic,
+   deleteNoteEpic,
+   updateNoteEpic
+)

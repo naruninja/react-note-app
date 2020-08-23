@@ -50,6 +50,14 @@ export const noteSlice = createSlice({
             [note.id]: note,
          },
       }),
+      updateNote: (st: NoteState, { payload: note }: { payload: Note }) => ({
+         ...st,
+         noteDb: {
+            ...st.noteDb,
+            [note.id]: note,
+         },
+      }),
+      updateNote_success: (st: NoteState, { payload: note }: { payload: Note }) => st,
    },
 })
 

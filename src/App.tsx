@@ -1,8 +1,9 @@
 import React from 'react'
-import { Note, noteSlice, selNoteDb, selNoteList } from '_/slices/noteSlice'
+import { noteSlice, selNoteDb, selNoteList } from '_/slices/noteSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
-import { Route, Switch, Link } from 'react-router-dom'
+import { Link, Route, Switch } from 'react-router-dom'
+import { NotePanel } from '_/note/NotePanel'
 
 export const App = () => {
    return <PageRouting />
@@ -62,29 +63,16 @@ const NoteDetailPageContent = ({ note }) => {
    return (
       <AppContainer>
          <PageTitle>Note</PageTitle>
-         <nav
-            className="breadcrumb is-size-5"
-            css={`
-               & a,
-               & li.is-active a,
-               &.breadcrumb li + li::before {
-                  color: white;
-                  &:hover {
-                     color: white;
-                  }
-               }
-            `}>
-            <ul>
-               <li>
-                  <Link to={'/'}>Notes</Link>
-               </li>
-               <li className="is-active">
-                  <Link to={'/'}>Note {note.id}</Link>
-               </li>
-            </ul>
-         </nav>
-
          <NotePanel note={note} hideDetail />
+         <Link to={'/'}>
+            <div
+               className={'is-size-5'}
+               css={`
+                  color: white;
+               `}>
+               Back to notes
+            </div>
+         </Link>
       </AppContainer>
    )
 }
@@ -136,36 +124,3 @@ const PageTitle = styled.h1.attrs({ className: 'title' })`
    color: white;
 `
 
-const NotePanel: React.FC = ({
-   note,
-   hideDetail = false,
-}: {
-   note: Note
-   hideDetail?: boolean
-}) => {
-   const dispatch = useDispatch()
-   return (
-      <div
-         className={'panel'}
-         css={`
-            background-color: white;
-         `}>
-         <div className="panel-block is-size-5">{note.title}</div>
-         <div className="panel-block">
-            <div className="buttons are-small">
-               {!hideDetail && (
-                  <Link to={`/note/${note.id}`}>
-                     <button className="button is-white">Detail</button>
-                  </Link>
-               )}
-               <button
-                  className="button is-light is-danger"
-                  onClick={() => dispatch(noteSlice.actions.deleteNote(note.id))}>
-                  Delete
-               </button>
-               <button className="button is-light is-warning">Edit</button>
-            </div>
-         </div>
-      </div>
-   )
-}
