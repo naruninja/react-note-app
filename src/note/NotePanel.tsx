@@ -2,6 +2,7 @@ import React from 'react'
 import { Note, noteSlice } from '_/slices/noteSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, Route, Switch } from 'react-router-dom'
+import { useTexts } from '_/slices/langSlice'
 
 export const NotePanel: React.FC = ({
    note,
@@ -11,6 +12,7 @@ export const NotePanel: React.FC = ({
    hideDetail?: boolean
 }) => {
    const dispatch = useDispatch()
+   const t = useTexts()
 
    // edited title
    const [title, setTitle] = React.useState(null)
@@ -67,16 +69,16 @@ export const NotePanel: React.FC = ({
             <div className="buttons are-small">
                {!hideDetail && (
                   <Link to={`/note/${note.id}`}>
-                     <button className="button is-white">Show detail</button>
+                     <button className="button is-white">{t`NotePanel.showDetailBtn`}</button>
                   </Link>
                )}
                <button
                   className="button is-light is-danger"
                   onClick={() => {
-                     if (!confirm('Do you really want to delete this note?')) return
+                     if (!confirm(t`NotePanel.deleteNoteBtn.confirm`)) return
                      dispatch(noteSlice.actions.deleteNote(note.id))
                   }}>
-                  Delete
+                  {t`NotePanel.deleteNoteBtn`}
                </button>
             </div>
          </div>

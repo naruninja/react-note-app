@@ -29,7 +29,7 @@ export const noteSlice = createSlice({
          ...st,
          noteDb: dbify(notes),
       }),
-      addNote: (st, { payload: noteContent }: {payload: string}) => st,
+      addNote: (st, { payload: noteContent }: { payload: string }) => st,
       addNote_success: (st: NoteState, { payload: note }: { payload: Note }) => ({
          ...st,
          noteDb: {
