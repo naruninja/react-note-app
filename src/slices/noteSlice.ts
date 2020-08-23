@@ -67,5 +67,5 @@ export const selNoteList = createSelector(
    noteDb =>
       Object.values(noteDb)
          .filter(x => !!x)
-         .sort((p, n) => p.id - n.id)
+         .sort((p, n) => n.id - p.id)
 )

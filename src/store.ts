@@ -1,5 +1,5 @@
 import { createEpicMiddleware } from 'redux-observable'
-import { configureStore } from '@reduxjs/toolkit'
+import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import { noteSlice } from '_/slices/noteSlice'
 import { rootEpic } from '_/epic'
 import { history } from '_/inst'
@@ -7,11 +7,12 @@ import { connectRouter, routerMiddleware } from 'connected-react-router'
 
 const epicMiddleware = createEpicMiddleware()
 
-const store = configureStore({
-   reducer: {
-      note: noteSlice.reducer,
-      router: connectRouter(history),
-   },
+export const rootReducer = combineReducers({
+   note: noteSlice.reducer,
+   router: connectRouter(history),
+})
+export const store = configureStore({
+   reducer: rootReducer,
    devTools: true,
    middleware: [epicMiddleware, routerMiddleware(history)],
 })
@@ -19,5 +20,3 @@ const store = configureStore({
 export type RootState = ReturnType<typeof store.getState>
 
 epicMiddleware.run(rootEpic)
-
-export { store }

@@ -11,14 +11,7 @@
       "baseUrl": "src",
       "jsx": "react",
       "paths": {
-         "Components/*": ["components/*"],
-         "Containers/*": ["containers/*"],
-         "Reducers/*": ["reducers/*"],
-         "Sagas/*": ["sagas/*"],
-         "Services/*": ["services/*"],
-         "Root/*": ["*"],
-         "_/*": ["*"],
-         "_pw/*": ["product-web/*"]
+         "_/*": ["*"]
       }
    },
    "include": ["src"]
