@@ -27,6 +27,7 @@ jobs:
       - image: "circleci/node:latest"
     steps:
       - checkout
+      - run: ls -la . && pwd
       - run: yarn test
 
   build:
