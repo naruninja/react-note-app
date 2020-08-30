@@ -33,6 +33,12 @@ jobs:
     steps:
       - run: yarn test
 
+  deploy:
+    docker:
+      - image: "circleci/node:latest"
+    steps:
+      - run: ls build
+
 workflows:
   test_build:
     jobs:
