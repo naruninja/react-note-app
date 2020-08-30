@@ -46,11 +46,15 @@ jobs:
   
   deploy:
     docker:
-      - image: "circleci/node:latest"
+      - image: "google/cloud-sdk:latest"
     steps:
       - attach_workspace:
           at: /home/circleci
-      - run: ls build
+      - run: |
+          echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
+          gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+          gsutil cp build/index.html gs://notes-naruninja-bucket/index.html
+
 
 workflows:
   test_build:
