@@ -1,6 +1,6 @@
 version: 2.1
 jobs:
-  build:
+  install:
     docker:
       - image: "circleci/node:latest"
     steps:
@@ -17,18 +17,32 @@ jobs:
           key: yarn-packages-{{ checksum "yarn.lock" }}
           paths:
             - ~/.cache/yarn
+      - persist_to_workspace:
+          root: "."
+          paths:
+            - "node_modules"
+  build:
+    docker:
+      - image: "circleci/node:latest"
+    steps:
       - run: yarn build
+
   test:
     docker:
       - image: "circleci/node:latest"
     steps:
-      - checkout
       - run: yarn test
 
 workflows:
   test_build:
     jobs:
-      - build
-      - test
-
-  
+      - install
+      - test:
+          requires:
+            - install
+      - build:
+          requires:
+            - test
+      - deploy:
+          requires:
+            - build
