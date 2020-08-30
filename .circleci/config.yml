@@ -30,7 +30,6 @@ jobs:
           at: /home/circleci
       - run: yarn test
 
-
   build:
     docker:
       - image: "circleci/node:latest"
@@ -42,7 +41,7 @@ jobs:
           root: "/home/circleci"
           paths:
             - "project"
-  
+
   deploy:
     docker:
       - image: "google/cloud-sdk:latest"
@@ -55,7 +54,6 @@ jobs:
           pwd
           ls -la .
           gsutil cp project/build/index.html gs://notes-naruninja-bucket/index.html
-
 
 workflows:
   test_build:
@@ -70,3 +68,7 @@ workflows:
       - deploy:
           requires:
             - build
+          filters:
+            branches:
+              only:
+                - gcp
