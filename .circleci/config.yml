@@ -28,7 +28,6 @@ jobs:
     steps:
       - attach_workspace:
           at: /home/circleci
-      - run: ls -la . && pwd
       - run: yarn test
 
 
@@ -52,7 +51,7 @@ jobs:
           at: /home/circleci
       - run: |
           echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
-          gsutil cp build/index.html gs://notes-naruninja-bucket/index.html
+          gsutil cp project/build/index.html gs://notes-naruninja-bucket/index.html
 
 
 workflows:
