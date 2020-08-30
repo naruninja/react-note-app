@@ -21,22 +21,27 @@ jobs:
           root: "."
           paths:
             - "node_modules"
-  build:
-    docker:
-      - image: "circleci/node:latest"
-    steps:
-      - run: yarn build
 
   test:
     docker:
       - image: "circleci/node:latest"
     steps:
+      - checkout
       - run: yarn test
 
+  build:
+    docker:
+      - image: "circleci/node:latest"
+    steps:
+      - checkout
+      - run: yarn build
+
+  
   deploy:
     docker:
       - image: "circleci/node:latest"
     steps:
+      - checkout
       - run: ls build
 
 workflows:
