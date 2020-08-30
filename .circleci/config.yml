@@ -24,3 +24,11 @@ jobs:
     steps:
       - checkout
       - run: yarn test
+
+workflows:
+  test_build:
+    jobs:
+      - build
+      - test
+
+  
