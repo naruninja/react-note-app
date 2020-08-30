@@ -18,31 +18,38 @@ jobs:
           paths:
             - ~/.cache/yarn
       - persist_to_workspace:
-          root: "/home/circleci/project"
+          root: "/home/circleci"
           paths:
-            - "node_modules"
+            - "project"
 
   test:
     docker:
       - image: "circleci/node:latest"
     steps:
-      - checkout
+      - attach_workspace:
+          at: /home/circleci
       - run: ls -la . && pwd
       - run: yarn test
+
 
   build:
     docker:
       - image: "circleci/node:latest"
     steps:
-      - checkout
+      - attach_workspace:
+          at: /home/circleci
       - run: yarn build
-
+      - persist_to_workspace:
+          root: "/home/circleci"
+          paths:
+            - "project"
   
   deploy:
     docker:
       - image: "circleci/node:latest"
     steps:
-      - checkout
+      - attach_workspace:
+          at: /home/circleci
       - run: ls build
 
 workflows:
