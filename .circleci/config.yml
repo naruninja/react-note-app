@@ -1,7 +1,14 @@
 version: 2.1
-orbs:
-  node: circleci/node@3.0.0
-workflows:
-  node-tests:
-    jobs:
-      - node/test
+jobs:
+  build:
+    docker:
+      - image: 'circleci/node:latest'
+    steps:
+      - checkout
+      - run: yarn build
+  test:
+    docker:
+      - image: 'circleci/node:lastest'
+    steps:
+      - checkout
+      - run: yarn test
