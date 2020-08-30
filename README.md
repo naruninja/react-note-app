@@ -1,6 +1,6 @@
 # Yet Another Note App
 
-(https://circleci.com/gh/naruninja/react-note-app/tree/gcp.svg?style=shield)[https://circleci.com/gh/naruninja/react-note-app/tree/gcp]
+![CircleCI](https://circleci.com/gh/naruninja/react-note-app/tree/gcp.svg?style=shield)[https://circleci.com/gh/naruninja/react-note-app/tree/gcp]
 
 Made by Matěj Šmíd
 
