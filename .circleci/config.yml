@@ -50,6 +50,7 @@ jobs:
       - attach_workspace:
           at: /home/circleci
       - run: |
+          cd /home/circleci
           echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
           pwd
           ls -la .
