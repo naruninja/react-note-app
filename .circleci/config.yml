@@ -54,6 +54,7 @@ jobs:
           pwd
           ls -la .
           gsutil cp project/build/index.html gs://notes-naruninja-bucket/index.html
+          gsutil setmeta -h Cache-Control:'Cache-Control: private, max-age=20, no-transform' gs://notes-naruninja-bucket/index.html
 
 workflows:
   test_build:
