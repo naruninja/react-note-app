@@ -31,7 +31,7 @@ const texts = {
       'NotePanel.deleteNoteBtn.confirm': 'Do you really want to delete this note?',
       'NoteDetailPage.title': 'Note',
       'NoteDetailPage.backToNotes': 'Back to notes',
-      'NoteListPage.title': 'Your note list',
+      'NoteListPage.title': 'Your notes',
       'NewNote.placeholder': 'e.g. Do not forget the dog at home.',
    },
    cs: {
